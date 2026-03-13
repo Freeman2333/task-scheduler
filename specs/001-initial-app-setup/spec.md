@@ -19,7 +19,7 @@ A user opens the app and immediately sees a split-panel layout: the task list on
 
 1. **Given** a user opens the app, **When** the page loads, **Then** the task list panel is visible on the left and the calendar panel is visible on the right simultaneously — no navigation required.
 2. **Given** the app is open with no tasks, **When** the user creates a task with a title and description, **Then** the task appears in the list immediately.
-3. **Given** a task exists, **When** the user edits its title and/or description and saves, **Then** the updated values are shown in the list.
+3. **Given** a task exists, **When** the user triggers edit, **Then** a modal dialog opens with the task's current title and description pre-filled; **When** the user saves, **Then** the modal closes and updated values are shown in the list.
 4. **Given** an uncompleted task, **When** the user marks it as complete, **Then** it is visually distinguished from uncompleted tasks (e.g. strikethrough or different style).
 5. **Given** a completed task, **When** the user marks it as uncomplete, **Then** it returns to the uncompleted visual style.
 6. **Given** a task exists, **When** the user attempts to delete it, **Then** a confirmation prompt appears; if confirmed, the task is removed; if cancelled, it remains.
@@ -29,7 +29,7 @@ A user opens the app and immediately sees a split-panel layout: the task list on
 
 ### User Story 2 – Schedule Tasks on a Calendar (Priority: P2)
 
-The right panel shows a monthly calendar. Tasks that have been scheduled for a date appear on the appropriate day cell. The user can drag an unscheduled task from the left panel onto a calendar date to schedule it. They can also drag a scheduled task to a different date to reschedule it, or drag it back to the left panel to unschedule it.
+The right panel shows a calendar that can be toggled between month view and week view. The user can navigate to previous and next months or weeks. Tasks that have been scheduled for a date appear on the appropriate day cell in both views. The user can drag an unscheduled task from the left panel onto a calendar date to schedule it. They can also drag a scheduled task to a different date to reschedule it, or drag it back to the left panel to unschedule it.
 
 **Why this priority**: The calendar/scheduling feature is what makes this a task *scheduler* rather than just a to-do list. It builds on top of the task list (P1) and adds time awareness.
 
@@ -55,6 +55,17 @@ The right panel shows a monthly calendar. Tasks that have been scheduled for a d
 
 ---
 
+## Clarifications
+
+### Session 2026-03-13
+
+- Q: Do scheduled tasks remain visible in the left list, or disappear once placed on the calendar? → A: Scheduled tasks remain in the left list with a visual indicator showing their scheduled date.
+- Q: How does task editing work — inline, modal, or side panel? → A: Modal dialog — a centered popup with title and description fields.
+- Q: In what order are tasks displayed in the left list? → A: Newest first — reverse creation order, most recently created at top.
+- Q: Can users navigate the calendar to other months, and are other calendar views available? → A: Users can navigate to previous/next months and can switch between month view and week view.
+
+---
+
 ## Requirements *(mandatory)*
 
 ### Functional Requirements
@@ -62,15 +73,18 @@ The right panel shows a monthly calendar. Tasks that have been scheduled for a d
 - **FR-001**: The app MUST display a split-panel layout on the initial screen: task list on the left, monthly calendar on the right — both always visible simultaneously.
 - **FR-002**: System MUST allow users to create a task with a title (mandatory) and an optional description.
 - **FR-003**: System MUST prevent task creation when the title field is empty and display a clear user-facing error.
-- **FR-004**: System MUST display all tasks (completed and uncompleted) in the left-panel list view.
+- **FR-004**: System MUST display all tasks (completed and uncompleted) in the left-panel list view, including tasks that are scheduled on the calendar. Tasks MUST be ordered newest first (most recently created at the top).
+- **FR-004a**: Scheduled tasks in the left list MUST show a visual indicator of their scheduled date (e.g. a date label or badge).
 - **FR-005**: System MUST visually distinguish completed tasks from uncompleted tasks in the list view.
-- **FR-006**: Users MUST be able to edit a task's title and description after creation.
+- **FR-006**: Users MUST be able to edit a task's title and description after creation via a modal dialog that contains the title and description fields. The split-panel layout behind the modal remains intact while editing.
 - **FR-007**: Users MUST be able to toggle a task between completed and uncompleted status.
 - **FR-008**: Users MUST be able to delete a task; the system MUST display a confirmation prompt before deleting.
 - **FR-009**: System MUST persist all task data (title, description, status, scheduled date) across page reloads and browser restarts.
 - **FR-010**: The right-panel calendar MUST show all scheduled tasks on their respective date cells.
-- **FR-011**: Users MUST be able to schedule a task for a specific date by dragging it from the left list panel onto a calendar date in the right panel.
-- **FR-012**: Users MUST be able to reschedule a task by dragging it from one calendar date to another.
+- **FR-010a**: The calendar MUST support navigation to the previous and next month (or week, depending on current view).
+- **FR-010b**: The calendar MUST allow users to switch between month view and week view via a toggle control. Both views show scheduled tasks on their respective dates.
+- **FR-011**: Users MUST be able to schedule a task for a specific date by dragging it from the left list panel onto a calendar date in the right panel (works in both month and week view).
+- **FR-012**: Users MUST be able to reschedule a task by dragging it from one calendar date to another (works in both month and week view).
 - **FR-013**: Users MUST be able to unschedule a task by dragging it from the calendar back to the left list panel, removing its scheduled date.
 - **FR-014**: Each task MUST have at most one scheduled date at any time.
 - **FR-015**: Completed tasks with a scheduled date MUST still appear on the calendar on their scheduled date, with their completed status visually indicated.
@@ -99,11 +113,13 @@ The right panel shows a monthly calendar. Tasks that have been scheduled for a d
 
 - Single user only; no authentication, sessions, or multi-user support in this version.
 - The initial screen is a fixed split-panel: list on the left, calendar on the right — no toggling between views required.
-- The calendar shows a monthly view; week/day views are out of scope for v1.
+- The calendar supports month view and week view; users can toggle between them. Day view is out of scope for v1.
+- The calendar opens on the current month/week by default and supports previous/next navigation.
 - "Unscheduling" a task means removing the scheduled date; the task returns to the left list panel without a date.
 - Completed status and scheduled date are independent; a task can be completed without a scheduled date, or scheduled without being completed.
 - Description is optional; a task with only a title is valid.
 - Long text (title or description) is truncated in compact views and shown in full in the edit/detail view.
+- Tasks in the left list are ordered newest first (reverse creation order); there is no manual reordering in v1.
 - Overflowing day cells on the calendar scroll vertically; no tasks are hidden or collapsed.
 - The app is a web app accessible via a browser; no mobile-native or offline-first requirements beyond standard browser persistence.
 
@@ -114,5 +130,5 @@ The right panel shows a monthly calendar. Tasks that have been scheduled for a d
 - Multiple users, accounts, authentication, or login.
 - Recurring tasks or reminders/notifications.
 - Task priorities, labels, or categories.
-- Week and day calendar views (monthly only for v1).
+- Day calendar view (month and week views are in scope; day view is not).
 - Sharing, exporting, or importing tasks.
