@@ -1,0 +1,35 @@
+---
+description: Project Development Guidelines
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# task scheduler Development Guidelines
+
+Auto-generated from all feature plans. Last updated: 2026-03-13
+
+## Active Technologies
+
+- TypeScript 5.x / Node.js 20 (via Next.js 15) + Next.js 15 (App Router), Tailwind CSS 3, shadcn/ui, Drizzle ORM, @neondatabase/serverless, FullCalendar React (@fullcalendar/react, @fullcalendar/daygrid, @fullcalendar/timegrid, @fullcalendar/interaction), dnd-kit (@dnd-kit/core, @dnd-kit/modifiers) (001-initial-app-setup)
+
+## Project Structure
+
+```text
+src/
+tests/
+```
+
+## Commands
+
+npm test && npm run lint
+
+## Code Style
+
+TypeScript 5.x / Node.js 20 (via Next.js 15): Follow standard conventions
+
+## Recent Changes
+
+- 001-initial-app-setup: Added TypeScript 5.x / Node.js 20 (via Next.js 15) + Next.js 15 (App Router), Tailwind CSS 3, shadcn/ui, Drizzle ORM, @neondatabase/serverless, FullCalendar React (@fullcalendar/react, @fullcalendar/daygrid, @fullcalendar/timegrid, @fullcalendar/interaction), dnd-kit (@dnd-kit/core, @dnd-kit/modifiers)
+
+<!-- MANUAL ADDITIONS START -->
+<!-- MANUAL ADDITIONS END -->
