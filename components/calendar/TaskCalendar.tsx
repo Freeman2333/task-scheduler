@@ -6,6 +6,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin, { type EventDragStopArg } from '@fullcalendar/interaction';
 import type { EventDropArg, EventContentArg } from '@fullcalendar/core';
 import { scheduleTask, unscheduleTask } from '@/app/actions/tasks';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 import type { Task } from '@/lib/types';
 
 interface TaskCalendarProps {
@@ -17,6 +18,7 @@ export default function TaskCalendar({ tasks }: TaskCalendarProps) {
   const calendarContainerRef = useRef<HTMLDivElement>(null);
   const [, startTransition] = useTransition();
   const [error, setError] = useState('');
+  const isMobile = useMediaQuery('(max-width: 767px)');
 
   const events = tasks
     .filter((t) => t.scheduledDate !== null)
@@ -104,7 +106,11 @@ export default function TaskCalendar({ tasks }: TaskCalendarProps) {
           ref={calendarRef}
           plugins={[dayGridPlugin, interactionPlugin]}
           initialView="dayGridMonth"
-          headerToolbar={{
+          headerToolbar={isMobile ? {
+            left: 'prev,next',
+            center: 'title',
+            right: 'today',
+          } : {
             left: 'prev,next today',
             center: 'title',
             right: 'dayGridMonth,dayGridWeek',
