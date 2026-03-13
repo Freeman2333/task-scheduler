@@ -1,50 +1,48 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report:
+- Version change: (none) → 1.0.0 (initial ratification)
+- Modified principles: N/A (initial)
+- Added sections: Core Principles (6), Scope, Development Workflow, Governance
+- Removed sections: N/A
+- Templates: ✅ plan-template.md (Constitution Check remains generic); ✅ spec-template.md; ✅ tasks-template.md — no structural changes required
+- Follow-up TODOs: None
+-->
+# Task Scheduler Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Simplicity (YAGNI)
+Build only what the specification requires. Avoid extra libraries, features, or abstraction until needed. Prefer simple, readable code over clever solutions. Rationale: keeps the codebase maintainable and reduces long-term cost.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Code Quality and Structure
+Use clear naming, consistent file and folder structure, and small focused modules. Keep duplication low. Code must be easy for one developer to understand and change. Rationale: supports fast iteration and handoff.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Configuration and Secrets
+All environment-dependent configuration (e.g. database connection) MUST use environment variables. No secrets, API keys, or connection strings in source code or committed files. Rationale: security and portability across environments.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. No Testing
+Do not add unit tests, integration tests, or test infrastructure. No test files, testing frameworks, or test-related tasks. Implementation is code-only; validation is manual. Rationale: project scope explicitly excludes automated testing.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. User Experience
+Interfaces must be clear and predictable. Errors must be shown in user-friendly language with a path to recover. The app must feel responsive for normal use. Rationale: ensures the product is usable without documentation.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+### VI. Security
+No sensitive or secret data in client-side bundles. Validate and sanitize user input. Follow safe practices for data access and storage as appropriate for the chosen stack. Rationale: protects users and the system from common threats.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+## Scope
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+- Features and behavior are defined by the specification; do not implement unspecified behavior.
+- No testing tooling or test suites; manual verification only.
+- Technology choices (framework, database, hosting) are decided in the implementation plan, not in the constitution.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+## Development Workflow
+
+- Follow the Spec Kit flow: specification → plan → tasks → implementation.
+- Each feature branch has one spec; implementation must stay within that spec.
+- Complexity or new dependencies must be justified against the specification and YAGNI.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution supersedes ad-hoc preferences for this project. All implementation and plan decisions must comply with these principles. Amendments require updating this file, incrementing the version (MAJOR.MINOR.PATCH), and setting Last Amended to the change date. Use the spec and plan artifacts under `.specify/` and `specs/` for runtime development guidance.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: 2025-03-13 | **Last Amended**: 2025-03-13
