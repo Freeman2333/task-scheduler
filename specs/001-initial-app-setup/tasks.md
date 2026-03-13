@@ -21,7 +21,7 @@
 
 - [ ] T001 Scaffold Next.js 15 project at repo root: `npx create-next-app@latest . --typescript --tailwind --eslint --app --src-dir=false --import-alias="@/*"`
 - [ ] T002 Install database dependencies: `npm install drizzle-orm @neondatabase/serverless` and `npm install -D drizzle-kit`
-- [ ] T003 [P] Install FullCalendar packages: `npm install @fullcalendar/react @fullcalendar/daygrid @fullcalendar/timegrid @fullcalendar/interaction`
+- [ ] T003 [P] Install FullCalendar packages: `npm install @fullcalendar/react @fullcalendar/daygrid @fullcalendar/interaction` (no `@fullcalendar/timegrid` needed — using `dayGridWeek` not `timeGridWeek`)
 - [ ] T004 [P] Initialize shadcn/ui (`npx shadcn@latest init`) and add required components: `npx shadcn@latest add button input textarea dialog alert-dialog label badge`
 - [ ] T005 [P] Create folder structure: `app/actions/`, `components/task-list/`, `components/calendar/`, `db/`, `lib/`
 - [ ] T006 [P] Create `drizzle.config.ts` at repo root (see quickstart.md for content)
@@ -76,7 +76,7 @@
 
 ### Implementation
 
-- [ ] T021 [US2] Create `components/calendar/TaskCalendar.tsx` as a Client Component (`'use client'`): render a `FullCalendar` with `dayGridPlugin`, `timeGridPlugin`, and `interactionPlugin`. Set initial view to `dayGridMonth`. Add a view-switch toolbar button toggling between `dayGridMonth` and `timeGridWeek`. Enable `prev`/`next`/`today` navigation buttons. Accept `tasks: Task[]` as prop. Map tasks where `scheduledDate !== null` to FullCalendar events (`{ id, title, start: scheduledDate, extendedProps: { completed } }`).
+- [ ] T021 [US2] Create `components/calendar/TaskCalendar.tsx` as a Client Component (`'use client'`): render a `FullCalendar` with `dayGridPlugin` and `interactionPlugin` (no `timeGridPlugin` needed). Set initial view to `dayGridMonth`. Add a view-switch toolbar button toggling between `dayGridMonth` and `dayGridWeek` (date-only week view, consistent with the date-only data model). Enable `prev`/`next`/`today` navigation buttons. Accept `tasks: Task[]` as prop. Map tasks where `scheduledDate !== null` to FullCalendar events (`{ id, title, start: scheduledDate, extendedProps: { completed } }`).
 - [ ] T022 [US2] In `TaskCalendar.tsx`, style completed events visually (e.g. reduced opacity or strikethrough title) using FullCalendar's `eventClassNames` or `eventContent` callback to read `extendedProps.completed`.
 - [ ] T023 [US2] In `components/task-list/TaskList.tsx`, attach a `ref` to the task list container and initialise FullCalendar's `Draggable` on it in a `useEffect` (convert `TaskList` to a Client Component). Set `itemSelector: '[data-task-id]'` and `eventData` callback to return `{ id, title }` from the element's data attributes. Add `data-task-id` and `data-task-title` attributes to each `TaskItem` wrapper element.
 - [ ] T024 [US2] In `TaskCalendar.tsx`, enable `droppable={true}` and implement the `drop` callback (external drop from list): extract `taskId` from `info.draggedEl.dataset.taskId`, extract the dropped date as `YYYY-MM-DD`, call the `scheduleTask` Server Action.

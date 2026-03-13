@@ -10,7 +10,7 @@ Build a single-user personal task scheduler web app using Next.js (App Router) w
 ## Technical Context
 
 **Language/Version**: TypeScript 5.x / Node.js 20 (via Next.js 15)
-**Primary Dependencies**: Next.js 15 (App Router), Tailwind CSS 3, shadcn/ui, Drizzle ORM, @neondatabase/serverless, FullCalendar React (@fullcalendar/react, @fullcalendar/daygrid, @fullcalendar/timegrid, @fullcalendar/interaction), dnd-kit (@dnd-kit/core, @dnd-kit/modifiers)
+**Primary Dependencies**: Next.js 15 (App Router), Tailwind CSS 3, shadcn/ui, Drizzle ORM, @neondatabase/serverless, FullCalendar React (@fullcalendar/react, @fullcalendar/daygrid, @fullcalendar/interaction)
 **Storage**: PostgreSQL hosted on Neon (serverless, free tier)
 **Testing**: None (Constitution IV — No Testing)
 **Target Platform**: Web browser, deployed to Vercel (free hobby tier)
@@ -89,8 +89,7 @@ No constitution violations. All dependency choices are directly justified by spe
 
 | Dependency | Justified By |
 |------------|-------------|
-| FullCalendar | FR-010, FR-010a, FR-010b, FR-011, FR-012 — month/week views + drag-and-drop |
-| dnd-kit | FR-011, FR-013 — dragging from left list panel onto calendar drop targets |
+| FullCalendar | FR-010, FR-010a, FR-010b, FR-011, FR-012, FR-013 — month/week views, drag-and-drop, and external Draggable API for list→calendar |
 | Drizzle ORM | FR-009 — type-safe DB access, lightweight, Neon-compatible |
 | shadcn/ui | FR-006, FR-008 — edit modal (Dialog) and delete confirmation (AlertDialog) |
 

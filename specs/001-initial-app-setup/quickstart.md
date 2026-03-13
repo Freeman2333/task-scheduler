@@ -36,7 +36,7 @@ npm install drizzle-orm @neondatabase/serverless
 npm install -D drizzle-kit
 
 # Calendar and drag-and-drop
-npm install @fullcalendar/react @fullcalendar/daygrid @fullcalendar/timegrid @fullcalendar/interaction
+npm install @fullcalendar/react @fullcalendar/daygrid @fullcalendar/interaction
 
 # shadcn/ui (init first, then add components)
 npx shadcn@latest init

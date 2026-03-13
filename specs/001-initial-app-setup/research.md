@@ -30,7 +30,7 @@ const draggableContainer = new Draggable(containerRef.current, {
 
 // In FullCalendar:
 <FullCalendar
-  plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+  plugins={[dayGridPlugin, interactionPlugin]}
   droppable={true}               // accept external drops
   drop={handleExternalDrop}      // fires when list item dropped on calendar
   eventDrop={handleEventDrop}    // fires when calendar event dragged to new date

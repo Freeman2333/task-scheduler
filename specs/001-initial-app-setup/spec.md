@@ -70,7 +70,7 @@ The right panel shows a calendar that can be toggled between month view and week
 
 ### Functional Requirements
 
-- **FR-001**: The app MUST display a split-panel layout on the initial screen: task list on the left, monthly calendar on the right — both always visible simultaneously.
+- **FR-001**: The app MUST display a split-panel layout on the initial screen: task list on the left, calendar on the right — both always visible simultaneously.
 - **FR-002**: System MUST allow users to create a task with a title (mandatory) and an optional description.
 - **FR-003**: System MUST prevent task creation when the title field is empty and display a clear user-facing error.
 - **FR-004**: System MUST display all tasks (completed and uncompleted) in the left-panel list view, including tasks that are scheduled on the calendar. Tasks MUST be ordered newest first (most recently created at the top).
