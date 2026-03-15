@@ -21,6 +21,7 @@ import {
   arrayMove,
   useSortable,
 } from '@dnd-kit/sortable';
+import { GripVertical } from 'lucide-react';
 import { scheduleTask, unscheduleTask, reorderCalendarTasks } from '@/app/actions/tasks';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import type { Task } from '@/lib/types';
@@ -33,10 +34,12 @@ function SortableCalendarEvent({
   eventId,
   title,
   completed,
+  isMobile,
 }: {
   eventId: string;
   title: string;
   completed: boolean;
+  isMobile: boolean;
 }) {
   const { attributes, listeners, setNodeRef, isDragging } = useSortable({
     id: eventId,
@@ -45,17 +48,32 @@ function SortableCalendarEvent({
   return (
     <div
       ref={setNodeRef}
-      className={`flex items-center gap-1 px-1 py-0.5 text-xs w-full cursor-grab active:cursor-grabbing touch-none ${
-        completed ? 'opacity-50 line-through' : ''
-      } ${isDragging ? 'opacity-30' : ''}`}
+      className={`flex items-center gap-0.5 px-1 py-0.5 text-xs w-full ${
+        isMobile ? '' : 'cursor-grab active:cursor-grabbing touch-none'
+      } ${completed ? 'opacity-50 line-through' : ''} ${isDragging ? 'opacity-30' : ''}`}
       title={title}
-      onDragStart={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-      }}
-      {...attributes}
-      {...listeners}
+      {...(!isMobile
+        ? {
+            onDragStart: (e: React.DragEvent) => {
+              e.preventDefault();
+              e.stopPropagation();
+            },
+            ...attributes,
+            ...listeners,
+          }
+        : {})}
     >
+      {isMobile && (
+        <button
+          type="button"
+          className="flex-shrink-0 cursor-grab active:cursor-grabbing touch-none text-muted-foreground/70 hover:text-foreground"
+          aria-label="Drag to reorder"
+          {...attributes}
+          {...listeners}
+        >
+          <GripVertical className="h-3 w-3" />
+        </button>
+      )}
       <span className="truncate">{title}</span>
     </div>
   );
@@ -241,10 +259,11 @@ export default function TaskCalendar({ tasks: propTasks }: TaskCalendarProps) {
           eventId={arg.event.id}
           title={arg.event.title}
           completed={completed}
+          isMobile={isMobile}
         />
       );
     },
-    []
+    [isMobile]
   );
 
   const activeCalendarTask = activeCalendarId

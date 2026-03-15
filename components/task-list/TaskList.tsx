@@ -20,6 +20,7 @@ import { DragOverlay } from '@dnd-kit/core';
 import CreateTaskForm from './CreateTaskForm';
 import TaskItem from './TaskItem';
 import { reorderListTasks, scheduleTask } from '@/app/actions/tasks';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 import type { Task } from '@/lib/types';
 
 interface TaskListProps {
@@ -30,6 +31,7 @@ export default function TaskList({ tasks: initialTasks }: TaskListProps) {
   const dndId = useId();
   const [tasks, setTasks] = useState(initialTasks);
   const [activeId, setActiveId] = useState<string | null>(null);
+  const isMobile = useMediaQuery('(max-width: 767px)');
 
   useEffect(() => {
     setTasks(initialTasks);
@@ -115,13 +117,13 @@ export default function TaskList({ tasks: initialTasks }: TaskListProps) {
                 No tasks yet. Create one above.
               </p>
             ) : (
-              tasks.map((task) => <TaskItem key={task.id} task={task} />)
+              tasks.map((task) => <TaskItem key={task.id} task={task} isMobile={isMobile} />)
             )}
           </div>
         </SortableContext>
         <DragOverlay>
           {activeTask ? (
-            <TaskItem task={activeTask} isDragOverlay />
+            <TaskItem task={activeTask} isDragOverlay isMobile={isMobile} />
           ) : null}
         </DragOverlay>
       </DndContext>

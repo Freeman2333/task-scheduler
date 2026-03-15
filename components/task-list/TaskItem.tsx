@@ -3,7 +3,7 @@
 import { useState, useTransition } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Pencil, Trash2 } from 'lucide-react';
+import { GripVertical, Pencil, Trash2 } from 'lucide-react';
 import { toggleComplete, deleteTask } from '@/app/actions/tasks';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -24,9 +24,10 @@ import type { Task } from '@/lib/types';
 interface TaskItemProps {
   task: Task;
   isDragOverlay?: boolean;
+  isMobile?: boolean;
 }
 
-export default function TaskItem({ task, isDragOverlay }: TaskItemProps) {
+export default function TaskItem({ task, isDragOverlay, isMobile }: TaskItemProps) {
   const [showEdit, setShowEdit] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState('');
@@ -71,18 +72,35 @@ export default function TaskItem({ task, isDragOverlay }: TaskItemProps) {
     <div
       ref={setNodeRef}
       style={style}
-      className={`flex items-start gap-2 p-3 border-b border-border hover:bg-muted/50 transition-colors cursor-grab active:cursor-grabbing touch-none ${
-        isPending ? 'opacity-60' : ''
-      } ${isDragging ? 'opacity-30' : ''} ${isDragOverlay ? 'shadow-lg bg-background rounded-md border' : ''}`}
+      className={`flex items-start gap-2 p-3 border-b border-border hover:bg-muted/50 transition-colors ${
+        isMobile ? '' : 'cursor-grab active:cursor-grabbing touch-none'
+      } ${isPending ? 'opacity-60' : ''} ${isDragging ? 'opacity-30' : ''} ${
+        isDragOverlay ? 'shadow-lg bg-background rounded-md border' : ''
+      }`}
       data-task-id={task.id}
       data-task-title={task.title}
-      onDragStart={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-      }}
-      {...attributes}
-      {...listeners}
+      {...(!isMobile
+        ? {
+            onDragStart: (e: React.DragEvent) => {
+              e.preventDefault();
+              e.stopPropagation();
+            },
+            ...attributes,
+            ...listeners,
+          }
+        : {})}
     >
+      {isMobile && (
+        <button
+          type="button"
+          className="mt-0.5 flex-shrink-0 cursor-grab active:cursor-grabbing touch-none text-muted-foreground hover:text-foreground p-1"
+          aria-label="Drag to reorder"
+          {...attributes}
+          {...listeners}
+        >
+          <GripVertical className="h-5 w-5" />
+        </button>
+      )}
       <input
         type="checkbox"
         checked={task.completed}
