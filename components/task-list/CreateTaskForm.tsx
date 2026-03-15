@@ -7,9 +7,14 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 
+function todayStr() {
+  return new Date().toISOString().slice(0, 10);
+}
+
 export default function CreateTaskForm() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [scheduledDate, setScheduledDate] = useState(todayStr());
   const [titleError, setTitleError] = useState('');
   const [error, setError] = useState('');
   const [isPending, startTransition] = useTransition();
@@ -26,9 +31,10 @@ export default function CreateTaskForm() {
 
     startTransition(async () => {
       try {
-        await createTask(title.trim(), description.trim() || undefined);
+        await createTask(title.trim(), description.trim() || undefined, scheduledDate || undefined);
         setTitle('');
         setDescription('');
+        setScheduledDate(todayStr());
       } catch {
         setError('Failed to create task. Please try again.');
       }
@@ -59,6 +65,16 @@ export default function CreateTaskForm() {
           disabled={isPending}
           rows={2}
           className="resize-none"
+        />
+      </div>
+      <div className="space-y-1">
+        <Label htmlFor="task-date">Scheduled Date</Label>
+        <Input
+          id="task-date"
+          type="date"
+          value={scheduledDate}
+          onChange={(e) => setScheduledDate(e.target.value)}
+          disabled={isPending}
         />
       </div>
       {error && <p className="text-sm text-destructive">{error}</p>}

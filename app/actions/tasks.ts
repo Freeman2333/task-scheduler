@@ -20,12 +20,16 @@ export async function getTasks(): Promise<Task[]> {
   }));
 }
 
-export async function createTask(title: string, description?: string): Promise<void> {
+export async function createTask(title: string, description?: string, scheduledDate?: string): Promise<void> {
   const trimmed = title.trim();
   if (!trimmed) throw new Error('Title is required');
+  if (scheduledDate && !/^\d{4}-\d{2}-\d{2}$/.test(scheduledDate)) {
+    throw new Error('Invalid date format');
+  }
   await db.insert(tasks).values({
     title: trimmed,
     description: description?.trim() || null,
+    scheduledDate: scheduledDate || null,
   });
   revalidatePath('/');
 }
