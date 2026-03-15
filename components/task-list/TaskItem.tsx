@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { Pencil, Trash2 } from 'lucide-react';
 import { toggleComplete, deleteTask } from '@/app/actions/tasks';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -118,24 +119,25 @@ export default function TaskItem({ task, isDragOverlay }: TaskItemProps) {
         {error && <p className="text-xs text-destructive mt-1">{error}</p>}
       </div>
       <div
-        className="flex gap-1 flex-shrink-0"
+        className="flex gap-0.5 flex-shrink-0"
         onPointerDown={(e) => e.stopPropagation()}
       >
         <Button
-          size="sm"
+          size="icon"
           variant="ghost"
           onClick={() => setShowEdit(true)}
           disabled={isPending}
-          className="h-7 px-2 text-xs"
+          className="h-9 w-9 cursor-pointer text-muted-foreground hover:text-foreground"
+          aria-label="Edit task"
         >
-          Edit
+          <Pencil className="h-[18px] w-[18px]" />
         </Button>
         <AlertDialog>
           <AlertDialogTrigger
             disabled={isPending}
-            className="h-7 px-2 text-xs text-destructive hover:text-destructive hover:bg-accent rounded-md transition-colors"
+            render={<Button size="icon" variant="ghost" className="h-9 w-9 cursor-pointer text-muted-foreground hover:text-destructive" aria-label="Delete task" />}
           >
-            Delete
+            <Trash2 className="h-[18px] w-[18px]" />
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
