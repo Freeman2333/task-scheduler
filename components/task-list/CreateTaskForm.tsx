@@ -1,7 +1,15 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import { Plus } from 'lucide-react';
 import { createTask } from '@/app/actions/tasks';
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -12,6 +20,7 @@ function todayStr() {
 }
 
 export default function CreateTaskForm() {
+  const [open, setOpen] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [scheduledDate, setScheduledDate] = useState(todayStr());
@@ -19,8 +28,20 @@ export default function CreateTaskForm() {
   const [error, setError] = useState('');
   const [isPending, startTransition] = useTransition();
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  function resetForm() {
+    setTitle('');
+    setDescription('');
+    setScheduledDate(todayStr());
+    setTitleError('');
+    setError('');
+  }
+
+  function handleOpen() {
+    resetForm();
+    setOpen(true);
+  }
+
+  function handleSave() {
     setTitleError('');
     setError('');
 
@@ -32,9 +53,8 @@ export default function CreateTaskForm() {
     startTransition(async () => {
       try {
         await createTask(title.trim(), description.trim() || undefined, scheduledDate || undefined);
-        setTitle('');
-        setDescription('');
-        setScheduledDate(todayStr());
+        setOpen(false);
+        resetForm();
       } catch {
         setError('Failed to create task. Please try again.');
       }
@@ -42,45 +62,68 @@ export default function CreateTaskForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 border-b border-border space-y-3">
-      <div className="space-y-1">
-        <Label htmlFor="task-title">New Task</Label>
-        <Input
-          id="task-title"
-          placeholder="Task title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          disabled={isPending}
-          aria-invalid={!!titleError}
-        />
-        {titleError && (
-          <p className="text-sm text-destructive">{titleError}</p>
-        )}
+    <>
+      <div className="p-3 border-b border-border">
+        <Button onClick={handleOpen} className="w-full h-11 text-base cursor-pointer gap-2">
+          <Plus className="h-5 w-5" />
+          Add Task
+        </Button>
       </div>
-      <div className="space-y-1">
-        <Textarea
-          placeholder="Description (optional)"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          disabled={isPending}
-          rows={2}
-          className="resize-none"
-        />
-      </div>
-      <div className="space-y-1">
-        <Label htmlFor="task-date">Scheduled Date</Label>
-        <Input
-          id="task-date"
-          type="date"
-          value={scheduledDate}
-          onChange={(e) => setScheduledDate(e.target.value)}
-          disabled={isPending}
-        />
-      </div>
-      {error && <p className="text-sm text-destructive">{error}</p>}
-      <Button type="submit" disabled={isPending} className="w-full">
-        {isPending ? 'Adding…' : 'Add Task'}
-      </Button>
-    </form>
+      <Dialog open={open} onOpenChange={(v) => !v && setOpen(false)}>
+        <DialogContent className="sm:max-w-lg overflow-hidden">
+          <DialogHeader>
+            <DialogTitle>New Task</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-1">
+              <Label htmlFor="create-title">Title</Label>
+              <Input
+                id="create-title"
+                placeholder="Task title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                disabled={isPending}
+                aria-invalid={!!titleError}
+                autoFocus
+              />
+              {titleError && (
+                <p className="text-sm text-destructive">{titleError}</p>
+              )}
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="create-description">Description</Label>
+              <Textarea
+                id="create-description"
+                placeholder="Description (optional)"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                disabled={isPending}
+                rows={3}
+                className="resize-none"
+              />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="create-date">Scheduled Date</Label>
+              <Input
+                id="create-date"
+                type="date"
+                value={scheduledDate}
+                onChange={(e) => setScheduledDate(e.target.value)}
+                disabled={isPending}
+              />
+            </div>
+            {error && <p className="text-sm text-destructive">{error}</p>}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setOpen(false)} disabled={isPending}>
+              Cancel
+            </Button>
+            <Button onClick={handleSave} disabled={isPending}>
+              {isPending ? 'Adding…' : 'Add Task'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

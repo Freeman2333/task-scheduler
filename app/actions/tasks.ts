@@ -52,14 +52,34 @@ export async function createTask(title: string, description?: string, scheduledD
 
 export async function updateTask(
   id: string,
-  data: { title: string; description?: string }
+  data: { title: string; description?: string; scheduledDate?: string | null }
 ): Promise<void> {
   const trimmed = data.title.trim();
   if (!trimmed) throw new Error('Title is required');
-  await db
-    .update(tasks)
-    .set({ title: trimmed, description: data.description?.trim() || null })
-    .where(eq(tasks.id, id));
+  if (data.scheduledDate && !/^\d{4}-\d{2}-\d{2}$/.test(data.scheduledDate)) {
+    throw new Error('Invalid date format');
+  }
+
+  const set: Record<string, unknown> = {
+    title: trimmed,
+    description: data.description?.trim() || null,
+  };
+
+  if (data.scheduledDate !== undefined) {
+    if (data.scheduledDate) {
+      const [result] = await db
+        .select({ maxOrder: max(tasks.calendarOrder) })
+        .from(tasks)
+        .where(eq(tasks.scheduledDate, data.scheduledDate));
+      set.scheduledDate = data.scheduledDate;
+      set.calendarOrder = (result?.maxOrder ?? -1) + 1;
+    } else {
+      set.scheduledDate = null;
+      set.calendarOrder = 0;
+    }
+  }
+
+  await db.update(tasks).set(set).where(eq(tasks.id, id));
   revalidatePath('/');
 }
 

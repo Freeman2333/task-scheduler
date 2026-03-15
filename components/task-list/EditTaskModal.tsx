@@ -23,6 +23,7 @@ interface EditTaskModalProps {
 export default function EditTaskModal({ task, onClose }: EditTaskModalProps) {
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description ?? '');
+  const [scheduledDate, setScheduledDate] = useState(task.scheduledDate ?? '');
   const [titleError, setTitleError] = useState('');
   const [error, setError] = useState('');
   const [isPending, startTransition] = useTransition();
@@ -41,6 +42,7 @@ export default function EditTaskModal({ task, onClose }: EditTaskModalProps) {
         await updateTask(task.id, {
           title: title.trim(),
           description: description.trim() || undefined,
+          scheduledDate: scheduledDate || null,
         });
         onClose();
       } catch {
@@ -51,7 +53,7 @@ export default function EditTaskModal({ task, onClose }: EditTaskModalProps) {
 
   return (
     <Dialog open onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-lg overflow-hidden">
         <DialogHeader>
           <DialogTitle>Edit Task</DialogTitle>
         </DialogHeader>
@@ -77,7 +79,17 @@ export default function EditTaskModal({ task, onClose }: EditTaskModalProps) {
               onChange={(e) => setDescription(e.target.value)}
               disabled={isPending}
               rows={3}
-              className="resize-none"
+              className="resize-none break-all"
+            />
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor="edit-date">Scheduled Date</Label>
+            <Input
+              id="edit-date"
+              type="date"
+              value={scheduledDate}
+              onChange={(e) => setScheduledDate(e.target.value)}
+              disabled={isPending}
             />
           </div>
           {error && <p className="text-sm text-destructive">{error}</p>}
