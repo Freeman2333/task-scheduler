@@ -15,7 +15,7 @@
 
 **Purpose**: Install new dependencies required for drag-and-drop reordering
 
-- [ ] T001 Install @dnd-kit/core, @dnd-kit/sortable, @dnd-kit/utilities, and @dnd-kit/modifiers via npm in package.json
+- [x] T001 Install @dnd-kit/core, @dnd-kit/sortable, @dnd-kit/utilities, and @dnd-kit/modifiers via npm in package.json
 
 ---
 
@@ -25,11 +25,11 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T002 [P] Add listOrder (integer, not null, default 0) and calendarOrder (integer, not null, default 0) columns to the tasks table in db/schema.ts
-- [ ] T003 [P] Add listOrder (number) and calendarOrder (number) fields to the Task type in lib/types.ts
-- [ ] T004 Generate database migration with `npm run db:generate`, then apply with `npm run db:migrate`, then run backfill SQL to set initial list_order values from created_at DESC ordering and calendar_order values per scheduled_date group (see data-model.md for backfill SQL)
-- [ ] T005 Modify getTasks to order by listOrder ASC instead of createdAt DESC and include listOrder and calendarOrder in the response mapping in app/actions/tasks.ts
-- [ ] T006 Modify createTask to increment all existing tasks' listOrder by 1 (UPDATE tasks SET list_order = list_order + 1) before inserting the new task with listOrder 0 in app/actions/tasks.ts
+- [x] T002 [P] Add listOrder (integer, not null, default 0) and calendarOrder (integer, not null, default 0) columns to the tasks table in db/schema.ts
+- [x] T003 [P] Add listOrder (number) and calendarOrder (number) fields to the Task type in lib/types.ts
+- [x] T004 Generate database migration with `npm run db:generate`, then apply with `npm run db:migrate`, then run backfill SQL to set initial list_order values from created_at DESC ordering and calendar_order values per scheduled_date group (see data-model.md for backfill SQL)
+- [x] T005 Modify getTasks to order by listOrder ASC instead of createdAt DESC and include listOrder and calendarOrder in the response mapping in app/actions/tasks.ts
+- [x] T006 Modify createTask to increment all existing tasks' listOrder by 1 (UPDATE tasks SET list_order = list_order + 1) before inserting the new task with listOrder 0, and when scheduledDate is provided also set calendarOrder to MAX(calendar_order for that date) + 1, in app/actions/tasks.ts
 
 **Checkpoint**: Data layer is ready — tasks now carry ordering fields, are fetched in list_order order, and new tasks are inserted at the top
 
@@ -43,10 +43,10 @@
 
 ### Implementation for User Story 1
 
-- [ ] T007 [US1] Add reorderListTasks(orderedIds: string[]) server action that validates the input array is non-empty and batch-updates list_order = index for each task ID in app/actions/tasks.ts
-- [ ] T008 [P] [US1] Add a grip drag handle icon (using lucide-react GripVertical) to TaskItem, integrate useSortable hook from @dnd-kit/sortable, apply transform and transition styles, and prevent FullCalendar HTML5 dragstart from firing on the handle via onDragStart preventDefault in components/task-list/TaskItem.tsx
-- [ ] T009 [US1] Wrap the task list in TaskList with DndContext (PointerSensor, restrictToVerticalAxis modifier) and SortableContext (verticalListSortingStrategy), manage local task order state with useState, and call reorderListTasks server action on handleDragEnd using arrayMove to compute the new order in components/task-list/TaskList.tsx
-- [ ] T010 [US1] Add a DragOverlay in TaskList that renders a styled clone of the dragged task item during drag for clear visual feedback in components/task-list/TaskList.tsx
+- [x] T007 [US1] Add reorderListTasks(orderedIds: string[]) server action that validates the input array is non-empty and batch-updates list_order = index for each task ID in app/actions/tasks.ts
+- [x] T008 [P] [US1] Add a grip drag handle icon (using lucide-react GripVertical) to TaskItem, integrate useSortable hook from @dnd-kit/sortable, apply transform and transition styles, and prevent FullCalendar HTML5 dragstart from firing on the handle via onDragStart preventDefault in components/task-list/TaskItem.tsx
+- [x] T009 [US1] Wrap the task list in TaskList with DndContext (PointerSensor, restrictToVerticalAxis modifier) and SortableContext (verticalListSortingStrategy), manage local task order state with useState, and call reorderListTasks server action on handleDragEnd using arrayMove to compute the new order in components/task-list/TaskList.tsx
+- [x] T010 [US1] Add a DragOverlay in TaskList that renders a styled clone of the dragged task item during drag for clear visual feedback in components/task-list/TaskList.tsx
 
 **Checkpoint**: List reordering is fully functional — users can drag tasks by handle, see visual feedback, drop to reorder, and order persists after reload
 
@@ -60,12 +60,12 @@
 
 ### Implementation for User Story 2
 
-- [ ] T011 [US2] Modify scheduleTask to query MAX(calendar_order) WHERE scheduled_date = target date and set calendarOrder to max + 1 (or 0 if no tasks exist on that date) in app/actions/tasks.ts
-- [ ] T012 [US2] Modify unscheduleTask to also reset calendarOrder to 0 alongside setting scheduledDate to null in app/actions/tasks.ts
-- [ ] T013 [US2] Add reorderCalendarTasks(date: string, orderedIds: string[]) server action that validates date format and batch-updates calendar_order = index for each task ID scoped to that date in app/actions/tasks.ts
-- [ ] T014 [US2] Pass calendarOrder in FullCalendar event extendedProps and configure the eventOrder prop to sort events within each day by calendarOrder ascending in components/calendar/TaskCalendar.tsx
-- [ ] T015 [US2] Add DndContext with PointerSensor and per-date SortableContext groupings to TaskCalendar, render a drag handle (GripVertical icon) inside eventContent using useSortable, and prevent FullCalendar HTML5 dragstart on the handle via onDragStart preventDefault in components/calendar/TaskCalendar.tsx
-- [ ] T016 [US2] Add DragOverlay for calendar events and implement handleDragEnd that detects intra-day reorder (same date), computes new order with arrayMove, and calls reorderCalendarTasks server action in components/calendar/TaskCalendar.tsx
+- [x] T011 [US2] Modify scheduleTask to query MAX(calendar_order) WHERE scheduled_date = target date and set calendarOrder to max + 1 (or 0 if no tasks exist on that date) in app/actions/tasks.ts
+- [x] T012 [US2] Modify unscheduleTask to also reset calendarOrder to 0 alongside setting scheduledDate to null in app/actions/tasks.ts
+- [x] T013 [US2] Add reorderCalendarTasks(date: string, orderedIds: string[]) server action that validates date format and batch-updates calendar_order = index for each task ID scoped to that date in app/actions/tasks.ts
+- [x] T014 [US2] Pass calendarOrder in FullCalendar event extendedProps and configure the eventOrder prop to sort events within each day by calendarOrder ascending in components/calendar/TaskCalendar.tsx
+- [x] T015 [US2] Add DndContext with PointerSensor and restrictToVerticalAxis modifier, and per-date SortableContext groupings to TaskCalendar, render a drag handle (GripVertical icon) inside eventContent using useSortable only when the date has more than one task (hide handle for single-task dates per US2-AS3), and prevent FullCalendar HTML5 dragstart on the handle via onDragStart preventDefault in components/calendar/TaskCalendar.tsx
+- [x] T016 [US2] Add DragOverlay for calendar events and implement handleDragEnd that detects intra-day reorder (same date), computes new order with arrayMove, and calls reorderCalendarTasks server action in components/calendar/TaskCalendar.tsx
 
 **Checkpoint**: Calendar date reordering is fully functional — users can reorder tasks within a day cell by handle, per-date order persists after reload, and list order is unaffected
 
@@ -75,8 +75,8 @@
 
 **Purpose**: End-to-end verification and edge case handling
 
-- [ ] T017 Verify that FullCalendar list-to-calendar scheduling drag (task body drag) and dnd-kit reorder drag (handle drag) coexist without interference on both TaskItem and calendar events, and fix any event propagation conflicts in components/task-list/TaskItem.tsx and components/calendar/TaskCalendar.tsx
-- [ ] T018 Run all quickstart.md validation steps: confirm list_order and calendar_order columns exist in Drizzle Studio, verify list ordering matches previous created_at DESC after backfill, test list reorder + reload, test calendar date reorder + reload, test scheduling/rescheduling/unscheduling still works correctly
+- [x] T017 Verify that FullCalendar list-to-calendar scheduling drag (task body drag) and dnd-kit reorder drag (handle drag) coexist without interference on both TaskItem and calendar events, and fix any event propagation conflicts in components/task-list/TaskItem.tsx and components/calendar/TaskCalendar.tsx
+- [x] T018 Run all quickstart.md validation steps: confirm list_order and calendar_order columns exist in Drizzle Studio, verify list ordering matches previous created_at DESC after backfill, test list reorder + reload, test calendar date reorder + reload, test scheduling/rescheduling/unscheduling still works correctly
 
 ---
 

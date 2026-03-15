@@ -4,5 +4,7 @@ export type Task = {
   description: string | null;
   completed: boolean;
   scheduledDate: string | null;
+  listOrder: number;
+  calendarOrder: number;
   createdAt: string;
 };

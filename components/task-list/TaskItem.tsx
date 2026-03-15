@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { toggleComplete, deleteTask } from '@/app/actions/tasks';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -20,12 +22,27 @@ import type { Task } from '@/lib/types';
 
 interface TaskItemProps {
   task: Task;
+  isDragOverlay?: boolean;
 }
 
-export default function TaskItem({ task }: TaskItemProps) {
+export default function TaskItem({ task, isDragOverlay }: TaskItemProps) {
   const [showEdit, setShowEdit] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState('');
+
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: task.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
 
   function handleToggle() {
     setError('');
@@ -51,15 +68,26 @@ export default function TaskItem({ task }: TaskItemProps) {
 
   return (
     <div
-      className={`flex items-start gap-2 p-3 border-b border-border hover:bg-muted/50 transition-colors cursor-grab active:cursor-grabbing ${isPending ? 'opacity-60' : ''}`}
+      ref={setNodeRef}
+      style={style}
+      className={`flex items-start gap-2 p-3 border-b border-border hover:bg-muted/50 transition-colors cursor-grab active:cursor-grabbing ${
+        isPending ? 'opacity-60' : ''
+      } ${isDragging ? 'opacity-30' : ''} ${isDragOverlay ? 'shadow-lg bg-background rounded-md border' : ''}`}
       data-task-id={task.id}
       data-task-title={task.title}
+      onDragStart={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      }}
+      {...attributes}
+      {...listeners}
     >
       <input
         type="checkbox"
         checked={task.completed}
         onChange={handleToggle}
         disabled={isPending}
+        onPointerDown={(e) => e.stopPropagation()}
         className="mt-1 h-4 w-4 flex-shrink-0 cursor-pointer accent-primary"
         aria-label={`Mark "${task.title}" as ${task.completed ? 'incomplete' : 'complete'}`}
       />
@@ -89,7 +117,10 @@ export default function TaskItem({ task }: TaskItemProps) {
         )}
         {error && <p className="text-xs text-destructive mt-1">{error}</p>}
       </div>
-      <div className="flex gap-1 flex-shrink-0">
+      <div
+        className="flex gap-1 flex-shrink-0"
+        onPointerDown={(e) => e.stopPropagation()}
+      >
         <Button
           size="sm"
           variant="ghost"
