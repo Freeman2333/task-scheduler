@@ -8,6 +8,7 @@ import {
   DndContext,
   pointerWithin,
   PointerSensor,
+  TouchSensor,
   useSensor,
   useSensors,
   DragOverlay,
@@ -44,7 +45,7 @@ function SortableCalendarEvent({
   return (
     <div
       ref={setNodeRef}
-      className={`flex items-center gap-1 px-1 py-0.5 text-xs w-full cursor-grab active:cursor-grabbing ${
+      className={`flex items-center gap-1 px-1 py-0.5 text-xs w-full cursor-grab active:cursor-grabbing touch-none ${
         completed ? 'opacity-50 line-through' : ''
       } ${isDragging ? 'opacity-30' : ''}`}
       title={title}
@@ -96,7 +97,8 @@ export default function TaskCalendar({ tasks: propTasks }: TaskCalendarProps) {
   );
 
   const calendarSensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 5 } })
   );
 
   const handleCalendarDragStart = useCallback((event: DragStartEvent) => {

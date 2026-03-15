@@ -71,7 +71,7 @@ export default function TaskItem({ task, isDragOverlay }: TaskItemProps) {
     <div
       ref={setNodeRef}
       style={style}
-      className={`flex items-start gap-2 p-3 border-b border-border hover:bg-muted/50 transition-colors cursor-grab active:cursor-grabbing ${
+      className={`flex items-start gap-2 p-3 border-b border-border hover:bg-muted/50 transition-colors cursor-grab active:cursor-grabbing touch-none ${
         isPending ? 'opacity-60' : ''
       } ${isDragging ? 'opacity-30' : ''} ${isDragOverlay ? 'shadow-lg bg-background rounded-md border' : ''}`}
       data-task-id={task.id}
