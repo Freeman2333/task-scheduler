@@ -64,8 +64,12 @@ export default function CreateTaskForm() {
   return (
     <>
       <div className="p-3 border-b border-border">
-        <Button onClick={handleOpen} className="w-full h-11 text-base cursor-pointer gap-2">
-          <Plus className="h-5 w-5" />
+        <Button
+          onClick={handleOpen}
+          variant="secondary"
+          className="w-full h-10 cursor-pointer gap-2"
+        >
+          <Plus className="h-4 w-4" />
           Add Task
         </Button>
       </div>

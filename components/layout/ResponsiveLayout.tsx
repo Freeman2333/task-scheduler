@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import TaskList from '@/components/task-list/TaskList';
 import TaskCalendar from '@/components/calendar/TaskCalendar';
+import CreateTaskForm from '@/components/task-list/CreateTaskForm';
 import { Button } from '@/components/ui/button';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import type { Task } from '@/lib/types';
@@ -102,6 +103,7 @@ export default function ResponsiveLayout({ tasks }: ResponsiveLayoutProps) {
           </div>
         ) : (
           <div className="h-full overflow-hidden flex flex-col">
+            <CreateTaskForm />
             <TaskCalendar tasks={tasks} />
           </div>
         )}

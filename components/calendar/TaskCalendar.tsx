@@ -275,7 +275,7 @@ export default function TaskCalendar({ tasks: propTasks }: TaskCalendarProps) {
               initialView="dayGridMonth"
               headerToolbar={
                 isMobile
-                  ? { left: 'prev,next', center: 'title', right: 'today' }
+                  ? { left: 'prev,next', center: 'title', right: 'dayGridMonth,dayGridWeek' }
                   : {
                       left: 'prev,next today',
                       center: 'title',
